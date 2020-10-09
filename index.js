@@ -10,12 +10,17 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.get('/', (req, res) => {
-    res.send('this app works');
+    res.json('this app works');
 })
 
 const authRoute = require('./routes/auth');
+const tasksRoute = require('./routes/tasks');
+const listsRoute = require('./routes/lists');
 
 app.use('/auth', authRoute);
+app.use('/tasks', tasksRoute);
+app.use('/lists', listsRoute);
+
 
 mongoose.connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.qoybl.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`, {
     useNewUrlParser: true,
