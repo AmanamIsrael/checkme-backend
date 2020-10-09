@@ -84,3 +84,14 @@ exports.userRegister = async(req, res) => {
         res.status(400).json({ err: error });
     }
 }
+
+exports.getAllUsers = (req, res) => {
+    userModel.find({}).then((users) => {
+        res.json({
+            msg: "successfully gotten all users",
+            data: users
+        })
+    }).catch(error => {
+        res.status(400).json({ err: error });
+    })
+}
