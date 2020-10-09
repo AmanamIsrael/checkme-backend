@@ -14,8 +14,10 @@ app.get('/', (req, res) => {
 })
 
 const authRoute = require('./routes/auth');
+const tasksRoute = require('./routes/tasks');
 
 app.use('/auth', authRoute);
+app.use('/tasks', tasksRoute);
 
 mongoose.connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.qoybl.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`, {
     useNewUrlParser: true,
