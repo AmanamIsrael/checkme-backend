@@ -10,7 +10,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.get('/', (req, res) => {
-    res.send('this app works');
+    res.json('this app works');
 })
 
 const authRoute = require('./routes/auth');
