@@ -13,6 +13,10 @@ app.get('/', (req, res) => {
     res.send('this app works');
 })
 
+const authRoute = require('./routes/auth');
+
+app.use('/auth', authRoute);
+
 mongoose.connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.qoybl.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`, {
     useNewUrlParser: true,
     useUnifiedTopology: true
