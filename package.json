@@ -4,7 +4,7 @@
     "description": "backend for a simple task manager app",
     "main": "index.js",
     "scripts": {
-        "test": "node index.js"
+        "start": "node index.js"
     },
     "author": "",
     "license": "ISC",
