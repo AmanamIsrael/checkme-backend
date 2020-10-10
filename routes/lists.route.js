@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const listController = require('../controllers/lists/lists');
+const listController = require('../controllers/lists/lists.controller');
 const verify = require('../middlewares/verifyToken');
 
 router.get('/get-lists/:userId', verify, listController.getAllLists);

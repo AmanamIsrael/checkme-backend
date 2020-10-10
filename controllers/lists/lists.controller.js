@@ -1,4 +1,4 @@
-const listModel = require('../../models/lists');
+const listModel = require('../../models/lists.model');
 
 exports.getAllLists = (req, res) => {
     const id = req.params.userId;
