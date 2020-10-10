@@ -2,8 +2,8 @@ const taskModel = require('../../models/tasks.model');
 const listModel = require('../../models/lists.model');
 
 exports.getAllTasks = (req, res) => {
-    const id = req.query.userId;
-    taskModel.find({ author: id }).then((allTasks) => {
+    const authorId = req.query.userId;
+    taskModel.find({ author: authorId }).then((allTasks) => {
         res.json({
             msg: "Fetched all tasks successfully",
             data: allTasks
@@ -45,7 +45,7 @@ exports.createTask = async(req, res) => {
     const author = req.body.author;
     if (!listId || !title || !author) {
         res.json({
-            msg: 'List id, title and author is required'
+            msg: 'List id, Title and Author is required'
         })
     }
     const newTask = new taskModel({
@@ -72,7 +72,7 @@ exports.updateTask = (req, res) => {
     const authorId = req.body.author;
     if (!_listId || !tasksId || !authorId) {
         res.json({
-            msg: 'List id, Task id and !author id are required'
+            msg: 'List id, Task id and Author id are required'
         })
     }
     taskModel.findOneAndUpdate({ _id: tasksId, listId: _listId, author: authorId }, {
@@ -92,7 +92,7 @@ exports.deleteTask = (req, res) => {
     const authorId = req.body.author;
     if (!_listId || !tasksId || !authorId) {
         res.json({
-            msg: 'List id, Task id and !author id are required'
+            msg: 'List id, Task id and Author id are required'
         })
     }
     taskModel.findByIdAndRemove({ _id: tasksId, listId: _listId, author: authorId }).then((removedTask) => {
