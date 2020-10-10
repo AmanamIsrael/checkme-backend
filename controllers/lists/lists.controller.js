@@ -1,7 +1,7 @@
 const listModel = require('../../models/lists.model');
 
 exports.getAllLists = (req, res) => {
-    const id = req.params.userId;
+    const id = req.query.userId;
     listModel.find({ author: id }).then((list) => {
         res.json({
             msg: 'Successfully gotten all lists',
@@ -35,8 +35,8 @@ exports.createList = async(req, res) => {
 }
 
 exports.updateList = (req, res) => {
-    const listId = req.params.id;
-    const authorId = req.params.authorId;
+    const listId = req.query.id;
+    const authorId = req.query.authorId;
     if (!listId || !authorId) {
         res.json({
             msg: "list id and author id is required"
@@ -54,8 +54,8 @@ exports.updateList = (req, res) => {
 }
 
 exports.deleteList = (req, res) => {
-    const listId = req.params.id;
-    const authorId = req.params.authorId;
+    const listId = req.query.id;
+    const authorId = req.query.authorId;
     if (!listId || !authorId) {
         res.json({
             msg: "list id and author id is required"

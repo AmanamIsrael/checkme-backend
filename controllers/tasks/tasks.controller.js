@@ -1,8 +1,8 @@
 const taskModel = require('../../models/tasks.model');
 const listModel = require('../../models/lists.model');
 
-exports.getAllTasksInAllLists = (req, res) => {
-    const id = req.params.userId;
+exports.getAllTasks = (req, res) => {
+    const id = req.query.userId;
     taskModel.find({ author: id }).then((allTasks) => {
         res.json({
             msg: "Fetched all tasks successfully",
@@ -13,10 +13,10 @@ exports.getAllTasksInAllLists = (req, res) => {
     })
 }
 
-exports.getTasks = (req, res) => {
+exports.getTasksInList = (req, res) => {
         taskModel.find({
-            listId: req.params.listId,
-            author: req.params.authorId
+            listId: req.query.listId,
+            author: req.query.authorId
         }).then((allTasks) => {
             res.json({
                 msg: "Fetched all tasks successfully",
@@ -40,7 +40,7 @@ exports.searchTask = (req, res) => {
 }
 
 exports.createTask = async(req, res) => {
-    const listId = req.params.listId;
+    const listId = req.query.listId;
     const title = req.body.title;
     const author = req.body.author;
     if (!listId || !title || !author) {
@@ -67,8 +67,8 @@ exports.createTask = async(req, res) => {
 }
 
 exports.updateTask = (req, res) => {
-    const _listId = req.params.listId;
-    const tasksId = req.params.taskId;
+    const _listId = req.query.listId;
+    const tasksId = req.query.taskId;
     const authorId = req.body.author;
     if (!_listId || !tasksId || !authorId) {
         res.json({
@@ -87,8 +87,8 @@ exports.updateTask = (req, res) => {
 }
 
 exports.deleteTask = (req, res) => {
-    const _listId = req.params.listId;
-    const tasksId = req.params.taskId;
+    const _listId = req.query.listId;
+    const tasksId = req.query.taskId;
     const authorId = req.body.author;
     if (!_listId || !tasksId || !authorId) {
         res.json({
