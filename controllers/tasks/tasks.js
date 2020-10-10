@@ -1,29 +1,32 @@
 const taskModel = require('../../models/tasks');
-const { all } = require('../../routes/lists');
+const listModel = require('../../models/lists');
+
+exports.getAllTasksInAllLists = (req, res) => {
+    const id = req.params.userId;
+    taskModel.find({ author: id }).then((allTasks) => {
+        res.json({
+            msg: "Fetched all tasks successfully",
+            data: allTasks
+        })
+    }).catch(error => {
+        res.status(400).json({ err: error });
+    })
+}
 
 exports.getAllTasksInList = (req, res) => {
-    taskModel.find({
-        listId: req.params.listId
-    }).then((allTasks) => {
-        res.json({
-            msg: "Fetched all tasks successfully",
-            data: allTasks
+        taskModel.find({
+            listId: req.params.listId,
+            authorId: req.params.authorId
+        }).then((allTasks) => {
+            res.json({
+                msg: "Fetched all tasks successfully",
+                data: allTasks
+            })
+        }).catch(error => {
+            res.status(400).json({ err: error });
         })
-    }).catch(error => {
-        res.status(400).json({ err: error });
-    })
-}
-exports.getAllTasksInAllLists = (req, res) => {
-    taskModel.find({}).then((allTasks) => {
-        res.json({
-            msg: "Fetched all tasks successfully",
-            data: allTasks
-        })
-    }).catch(error => {
-        res.status(400).json({ err: error });
-    })
-}
-
+    }
+    // incomplete
 exports.searchTask = (req, res) => {
     const task = req.body.title
     taskModel.find({ title: task }).then((allTasks) => {
@@ -36,30 +39,38 @@ exports.searchTask = (req, res) => {
     })
 }
 
-exports.addTaskToSpecifiedList = (req, res) => {
+exports.addTaskToSpecifiedList = async(req, res) => {
+    const listId = req.params.listId;
+    const title = req.body.title;
+    const author = req.body.author;
     const newTask = new taskModel({
-        title: req.body.title,
-        listId: req.params.listId
+        title,
+        listId,
+        author
     });
-    newTask.save().then((createdTask) => {
+    const savedTask = await newTask.save();
+    const list = await listModel.findById({ _id: listId });
+    await list.createdTasks.push(savedTask);
+    await list.save().then(() => {
         res.json({
-            msg: "Task created successfully",
-            data: createdTask
+            msg: 'List added successfully',
+            data: newTask
         })
     }).catch(error => {
         res.status(400).json({ err: error });
-    })
+    });
 }
 
 exports.updateTaskOnSpecifiedList = (req, res) => {
     const _listId = req.params.listId;
     const tasksId = req.params.taskId;
-    if (!_listId || !tasksId) {
+    const authorId = req.body.author;
+    if (!_listId || !tasksId || !author) {
         res.json({
-            msg: 'List id and Task id are both required'
+            msg: 'List id, Task id and !author id are required'
         })
     }
-    taskModel.findOneAndUpdate({ _id: tasksId, listId: _listId }, {
+    taskModel.findOneAndUpdate({ _id: tasksId, listId: _listId, author: authorId }, {
         $set: req.body
     }).then(() => {
         res.json({
@@ -73,12 +84,13 @@ exports.updateTaskOnSpecifiedList = (req, res) => {
 exports.deleteTaskOnSpecifiedList = (req, res) => {
     const _listId = req.params.listId;
     const tasksId = req.params.taskId;
-    if (!_listId || !tasksId) {
+    const authorId = req.body.author;
+    if (!_listId || !tasksId || !author) {
         res.json({
-            msg: 'List id and Task id are both required'
+            msg: 'List id, Task id and !author id are required'
         })
     }
-    taskModel.findByIdAndRemove({ _id: tasksId, listId: _listId }).then((removedTask) => {
+    taskModel.findByIdAndRemove({ _id: tasksId, listId: _listId, author: authorId }).then((removedTask) => {
         res.json({
             msg: "successfully removed task",
             data: removedTask
