@@ -1,22 +1,22 @@
 const taskModel = require('../../models/tasks.model');
 const listModel = require('../../models/lists.model');
 
-// exports.getAllTasksInAllLists = (req, res) => {
-//     const id = req.params.userId;
-//     taskModel.find({ author: id }).then((allTasks) => {
-//         res.json({
-//             msg: "Fetched all tasks successfully",
-//             data: allTasks
-//         })
-//     }).catch(error => {
-//         res.status(400).json({ err: error });
-//     })
-// }
+exports.getAllTasksInAllLists = (req, res) => {
+    const id = req.params.userId;
+    taskModel.find({ author: id }).then((allTasks) => {
+        res.json({
+            msg: "Fetched all tasks successfully",
+            data: allTasks
+        })
+    }).catch(error => {
+        res.status(400).json({ err: error });
+    })
+}
 
 exports.getTasks = (req, res) => {
         taskModel.find({
             listId: req.params.listId,
-            authorId: req.params.authorId
+            author: req.params.authorId
         }).then((allTasks) => {
             res.json({
                 msg: "Fetched all tasks successfully",
