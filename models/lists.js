@@ -6,7 +6,16 @@ const listSchema = mongoose.Schema({
         required: true,
         min: 1,
         trim: true
-    }
-})
+    },
+    author: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Author',
+        required: true
+    },
+    createdTasks: [{
+        type: mongoose.Schema.Types.Mixed,
+        ref: 'createdtask',
+    }],
+}, { timestamps: true })
 
 module.exports = mongoose.model('list', listSchema);
