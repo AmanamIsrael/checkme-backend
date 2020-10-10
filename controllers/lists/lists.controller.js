@@ -15,6 +15,11 @@ exports.getAllLists = (req, res) => {
 exports.createList = async(req, res) => {
     const title = req.body.title;
     const author = req.body.author;
+    if (!title || !author) {
+        res.json({
+            msg: "title and author id are required"
+        })
+    }
     const newList = new listModel({
         title,
         author
@@ -32,6 +37,11 @@ exports.createList = async(req, res) => {
 exports.updateList = (req, res) => {
     const listId = req.params.id;
     const authorId = req.params.authorId;
+    if (!listId || !authorId) {
+        res.json({
+            msg: "list id and author id is required"
+        })
+    }
     listModel.findByIdAndUpdate({ author: authorId, _id: listId }, {
         $set: req.body
     }).then(() => {
@@ -48,7 +58,7 @@ exports.deleteList = (req, res) => {
     const authorId = req.params.authorId;
     if (!listId || !authorId) {
         res.json({
-            msg: "list id is required"
+            msg: "list id and author id is required"
         })
     }
     listModel.findByIdAndRemove({ author: authorId, _id: listId }).then((removedList) => {
@@ -56,5 +66,7 @@ exports.deleteList = (req, res) => {
             msg: "List removed successfully",
             data: removedList
         })
+    }).catch(error => {
+        res.status(400).json({ err: error });
     })
 }

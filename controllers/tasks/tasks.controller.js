@@ -43,6 +43,11 @@ exports.createTask = async(req, res) => {
     const listId = req.params.listId;
     const title = req.body.title;
     const author = req.body.author;
+    if (!listId || !title || !author) {
+        res.json({
+            msg: 'List id, title and author is required'
+        })
+    }
     const newTask = new taskModel({
         title,
         listId,
