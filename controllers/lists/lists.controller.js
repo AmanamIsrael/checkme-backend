@@ -17,7 +17,7 @@ exports.createList = async(req, res) => {
     const author = req.body.author;
     if (!title || !author) {
         res.json({
-            msg: "title and author id are required"
+            msg: "Title and Author id are required"
         })
     }
     const newList = new listModel({
@@ -35,11 +35,11 @@ exports.createList = async(req, res) => {
 }
 
 exports.updateList = (req, res) => {
-    const listId = req.query.id;
+    const listId = req.query.listId;
     const authorId = req.query.authorId;
     if (!listId || !authorId) {
         res.json({
-            msg: "list id and author id is required"
+            msg: "List id and Author id is required"
         })
     }
     listModel.findByIdAndUpdate({ author: authorId, _id: listId }, {
@@ -54,11 +54,11 @@ exports.updateList = (req, res) => {
 }
 
 exports.deleteList = (req, res) => {
-    const listId = req.query.id;
+    const listId = req.query.listId;
     const authorId = req.query.authorId;
     if (!listId || !authorId) {
         res.json({
-            msg: "list id and author id is required"
+            msg: "List id and Author id is required"
         })
     }
     listModel.findByIdAndRemove({ author: authorId, _id: listId }).then((removedList) => {
