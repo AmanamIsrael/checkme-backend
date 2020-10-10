@@ -1,5 +1,5 @@
-const taskModel = require('../../models/tasks');
-const listModel = require('../../models/lists');
+const taskModel = require('../../models/tasks.model');
+const listModel = require('../../models/lists.model');
 
 exports.getAllTasksInAllLists = (req, res) => {
     const id = req.params.userId;
@@ -65,7 +65,7 @@ exports.updateTaskOnSpecifiedList = (req, res) => {
     const _listId = req.params.listId;
     const tasksId = req.params.taskId;
     const authorId = req.body.author;
-    if (!_listId || !tasksId || !author) {
+    if (!_listId || !tasksId || !authorId) {
         res.json({
             msg: 'List id, Task id and !author id are required'
         })
@@ -85,7 +85,7 @@ exports.deleteTaskOnSpecifiedList = (req, res) => {
     const _listId = req.params.listId;
     const tasksId = req.params.taskId;
     const authorId = req.body.author;
-    if (!_listId || !tasksId || !author) {
+    if (!_listId || !tasksId || !authorId) {
         res.json({
             msg: 'List id, Task id and !author id are required'
         })

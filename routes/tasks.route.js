@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const taskController = require('../controllers/tasks/tasks');
+const taskController = require('../controllers/tasks/tasks.controller');
 const verify = require('../middlewares/verifyToken');
 
 router.get('/get-tasks/:userId', verify, taskController.getAllTasksInAllLists);

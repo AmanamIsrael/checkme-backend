@@ -13,9 +13,9 @@ app.get('/', (req, res) => {
     res.json('this app works');
 })
 
-const authRoute = require('./routes/auth');
-const tasksRoute = require('./routes/tasks');
-const listsRoute = require('./routes/lists');
+const authRoute = require('./routes/auth.route');
+const listsRoute = require('./routes/lists.route');
+const tasksRoute = require('./routes/tasks.route');
 
 app.use('/auth', authRoute);
 app.use('/tasks', tasksRoute);
