@@ -13,9 +13,28 @@ app.get('/', (req, res) => {
     res.json('this app works');
 })
 
+app.post(`/${process.env.DELETE_ROUTE}`, async(req, res) => {
+    try {
+        await userModel.deleteMany({});
+        await listsModel.deleteMany({});
+        await tasksModel.deleteMany({});
+        res.json({
+            msg: "deleted all collections"
+        })
+    } catch (error) {
+        res.json({
+            error
+        })
+    }
+
+})
+
 const authRoute = require('./routes/auth.route');
 const listsRoute = require('./routes/lists.route');
 const tasksRoute = require('./routes/tasks.route');
+const userModel = require('./models/user.model');
+const listsModel = require('./models/lists.model');
+const tasksModel = require('./models/tasks.model');
 
 app.use('/auth', authRoute);
 app.use('/tasks', tasksRoute);
