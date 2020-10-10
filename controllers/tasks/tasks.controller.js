@@ -1,19 +1,19 @@
 const taskModel = require('../../models/tasks.model');
 const listModel = require('../../models/lists.model');
 
-exports.getAllTasksInAllLists = (req, res) => {
-    const id = req.params.userId;
-    taskModel.find({ author: id }).then((allTasks) => {
-        res.json({
-            msg: "Fetched all tasks successfully",
-            data: allTasks
-        })
-    }).catch(error => {
-        res.status(400).json({ err: error });
-    })
-}
+// exports.getAllTasksInAllLists = (req, res) => {
+//     const id = req.params.userId;
+//     taskModel.find({ author: id }).then((allTasks) => {
+//         res.json({
+//             msg: "Fetched all tasks successfully",
+//             data: allTasks
+//         })
+//     }).catch(error => {
+//         res.status(400).json({ err: error });
+//     })
+// }
 
-exports.getAllTasksInList = (req, res) => {
+exports.getTasks = (req, res) => {
         taskModel.find({
             listId: req.params.listId,
             authorId: req.params.authorId
@@ -26,7 +26,7 @@ exports.getAllTasksInList = (req, res) => {
             res.status(400).json({ err: error });
         })
     }
-    // incomplete
+    // not efficient yet!
 exports.searchTask = (req, res) => {
     const task = req.body.title
     taskModel.find({ title: task }).then((allTasks) => {
@@ -39,7 +39,7 @@ exports.searchTask = (req, res) => {
     })
 }
 
-exports.addTaskToSpecifiedList = async(req, res) => {
+exports.createTask = async(req, res) => {
     const listId = req.params.listId;
     const title = req.body.title;
     const author = req.body.author;
@@ -61,7 +61,7 @@ exports.addTaskToSpecifiedList = async(req, res) => {
     });
 }
 
-exports.updateTaskOnSpecifiedList = (req, res) => {
+exports.updateTask = (req, res) => {
     const _listId = req.params.listId;
     const tasksId = req.params.taskId;
     const authorId = req.body.author;
@@ -81,7 +81,7 @@ exports.updateTaskOnSpecifiedList = (req, res) => {
     })
 }
 
-exports.deleteTaskOnSpecifiedList = (req, res) => {
+exports.deleteTask = (req, res) => {
     const _listId = req.params.listId;
     const tasksId = req.params.taskId;
     const authorId = req.body.author;
