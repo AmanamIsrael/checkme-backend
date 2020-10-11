@@ -1,4 +1,5 @@
 const listModel = require('../../models/lists.model');
+const tasksModel = require('../../models/tasks.model');
 
 exports.getAllLists = (req, res) => {
     const id = req.query.userId;
@@ -8,7 +9,7 @@ exports.getAllLists = (req, res) => {
             data: list
         });
     }).catch(error => {
-        res.status(400).json({ err: error });
+        res.status(400).json({ error });
     })
 }
 
@@ -17,7 +18,7 @@ exports.createList = async(req, res) => {
     const author = req.body.author;
     if (!title || !author) {
         res.json({
-            msg: "Title and Author id are required"
+            msg: "Title or Author id are required"
         })
     }
     const newList = new listModel({
@@ -30,7 +31,7 @@ exports.createList = async(req, res) => {
             data: list
         })
     }).catch(error => {
-        res.status(400).json({ err: error });
+        res.status(400).json({ error });
     });
 }
 
@@ -39,7 +40,7 @@ exports.updateList = (req, res) => {
     const authorId = req.query.authorId;
     if (!listId || !authorId) {
         res.json({
-            msg: "List id and Author id is required"
+            msg: "List id or Author id is required"
         })
     }
     listModel.findByIdAndUpdate({ author: authorId, _id: listId }, {
@@ -49,7 +50,7 @@ exports.updateList = (req, res) => {
             msg: 'List updated successfully'
         })
     }).catch(error => {
-        res.status(400).json({ err: error });
+        res.status(400).json({ error });
     })
 }
 
@@ -58,7 +59,7 @@ exports.deleteList = (req, res) => {
     const authorId = req.query.authorId;
     if (!listId || !authorId) {
         res.json({
-            msg: "List id and Author id is required"
+            msg: "List id or Author id is required"
         })
     }
     listModel.findByIdAndRemove({ author: authorId, _id: listId }).then((removedList) => {
@@ -67,6 +68,6 @@ exports.deleteList = (req, res) => {
             data: removedList
         })
     }).catch(error => {
-        res.status(400).json({ err: error });
+        res.status(400).json({ error });
     })
 }

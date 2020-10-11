@@ -81,7 +81,7 @@ exports.userRegister = async(req, res) => {
             },
         })
     } catch (error) {
-        res.status(400).json({ err: error });
+        res.status(400).json({ error });
     }
 }
 
@@ -100,6 +100,6 @@ exports.getAllUsers = (req, res) => {
         });
 
     }).catch(error => {
-        res.status(400).json({ err: error });
+        res.status(400).json({ error });
     })
 }
