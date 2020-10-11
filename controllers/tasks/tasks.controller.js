@@ -1,16 +1,18 @@
 const taskModel = require('../../models/tasks.model');
 const listModel = require('../../models/lists.model');
 
-exports.getAllTasks = (req, res) => {
-    const authorId = req.query.userId;
-    taskModel.find({ author: authorId }).then((allTasks) => {
+exports.getAllTasks = async(req, res) => {
+    try {
+        const authorId = req.query.authorId;
+        const allTasks = await taskModel.find({ author: authorId });
+        console.log(allTasks);
         res.json({
             msg: "Fetched all tasks successfully",
             data: allTasks
         })
-    }).catch(error => {
+    } catch (error) {
         res.status(400).json({ error });
-    })
+    }
 }
 
 exports.getTasksInList = (req, res) => {
