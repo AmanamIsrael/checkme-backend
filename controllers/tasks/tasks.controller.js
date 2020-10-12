@@ -15,42 +15,39 @@ exports.getAllTasks = async(req, res) => {
     }
 }
 
-exports.getTasksInList = (req, res) => {
-        taskModel.find({
-            listId: req.query.listId,
-            author: req.query.authorId
-        }).then((allTasks) => {
+exports.getTasksInList = async(req, res) => {
+        try {
+            const allTasks = await taskModel.find({
+                listId: req.query.listId,
+                author: req.query.authorId
+            })
             res.json({
                 msg: "Fetched all tasks successfully",
                 data: allTasks
             })
-        }).catch(error => {
+        } catch (error) {
             res.status(400).json({ error });
-        })
+        }
     }
     // not efficient yet!
-exports.searchTask = (req, res) => {
-    const task = req.body.title
-    taskModel.find({ title: task }).then((allTasks) => {
+exports.searchTask = async(req, res) => {
+    try {
+        const task = req.body.title;
+        const allTasks = await taskModel.find({ title: task });
         res.json({
             msg: "Fetched all tasks successfully",
             data: allTasks
         })
-    }).catch(error => {
+    } catch (error) {
         res.status(400).json({ error });
-    })
+    }
 }
 
 exports.createTask = async(req, res) => {
-    const listId = req.query.listId;
-    const title = req.body.title;
-    const author = req.body.author;
-    if (!listId || !title || !author) {
-        res.json({
-            msg: 'List id, Title or Author is required'
-        })
-    }
     try {
+        const listId = req.query.listId;
+        const title = req.body.title;
+        const author = req.body.author;
         const newTask = new taskModel({
             title,
             listId,
@@ -69,51 +66,39 @@ exports.createTask = async(req, res) => {
     }
 }
 
-exports.updateTask = (req, res) => {
-    const _listId = req.query.listId;
-    const tasksId = req.query.listId;
-    const authorId = req.body.author;
-    if (!_listId || !tasksId || !authorId) {
-        res.json({
-            msg: 'List id, Task id or Author id are required'
-        })
-    }
-    taskModel.findOneAndUpdate({ _id: tasksId, listId: _listId, author: authorId }, {
-        $set: req.body
-    }).then(() => {
+exports.updateTask = async(req, res) => {
+    try {
+        const _listId = req.query.listId;
+        const tasksId = req.query.listId;
+        const authorId = req.body.author;
+        await taskModel.findOneAndUpdate({ _id: tasksId, listId: _listId, author: authorId }, {
+            $set: req.body
+        });
         res.json({
             msg: "task updated successfully"
         })
-    }).catch(error => {
+    } catch (error) {
         res.status(400).json({ error });
-    })
+    }
 }
 
-exports.deleteTask = (req, res) => {
-    const _listId = req.query.listId;
-    const tasksId = req.query.listId;
-    const authorId = req.body.author;
-    if (!_listId || !tasksId || !authorId) {
+exports.deleteTask = async(req, res) => {
+    try {
+        const _listId = req.query.listId;
+        const tasksId = req.query.listId;
+        const authorId = req.body.author;
+        const removedTask = await taskModel.findByIdAndRemove({ _id: tasksId, listId: _listId, author: authorId });
         res.json({
-            msg: 'List id, Task id or Author id are required'
+            msg: "successfully removed task"
         })
+    } catch (error) {
+        res.status(400).json({ error });
     }
-    taskModel.findByIdAndRemove({ _id: tasksId, listId: _listId, author: authorId }).then((removedTask) => {
-        res.json({
-            msg: "successfully removed task",
-            data: removedTask
-        })
-    })
 }
 
 exports.completeTask = async(req, res) => {
-    const _listId = req.query.listId;
-    if (!_listId) {
-        res.json({
-            msg: "Task id or Author id is required"
-        })
-    }
     try {
+        const _listId = req.query.listId;
         const task = await taskModel.findOne({ listId: _listId });
         task.completed = true;
         await task.save();
