@@ -1,16 +1,21 @@
 const listModel = require('../../models/lists.model');
-const tasksModel = require('../../models/tasks.model');
 
-exports.getAllLists = (req, res) => {
-    const id = req.query.userId;
-    listModel.find({ author: id }).then((list) => {
+exports.getAllLists = async(req, res) => {
+    const userId = req.query.userId;
+    if (!userId) {
+        res.status(400).json({
+            msg: "userid is required"
+        })
+    }
+    try {
+        const list = await listModel.find({ author: userId });
         res.json({
             msg: 'Successfully gotten all lists',
             data: list
         });
-    }).catch(error => {
+    } catch (error) {
         res.status(400).json({ error });
-    })
+    }
 }
 
 exports.createList = async(req, res) => {
@@ -18,56 +23,59 @@ exports.createList = async(req, res) => {
     const author = req.body.author;
     if (!title || !author) {
         res.json({
-            msg: "Title or Author id are required"
+            msg: "title & author is required"
         })
     }
-    const newList = new listModel({
-        title,
-        author
-    });
-    newList.save().then((list) => {
+    try {
+        const newList = new listModel({
+            title,
+            author
+        });
+        await newList.save();
         res.json({
             msg: 'List added successfully',
-            data: list
+            data: newList
         })
-    }).catch(error => {
+    } catch (error) {
         res.status(400).json({ error });
-    });
+    }
 }
 
-exports.updateList = (req, res) => {
+exports.updateList = async(req, res) => {
     const listId = req.query.listId;
     const authorId = req.query.authorId;
     if (!listId || !authorId) {
         res.json({
-            msg: "List id or Author id is required"
+            msg: "listid && authorid is required"
         })
     }
-    listModel.findByIdAndUpdate({ author: authorId, _id: listId }, {
-        $set: req.body
-    }).then(() => {
+    try {
+        await listModel.findByIdAndUpdate({ author: authorId, _id: listId }, {
+            $set: req.body
+        })
         res.json({
             msg: 'List updated successfully'
         })
-    }).catch(error => {
+    } catch (error) {
         res.status(400).json({ error });
-    })
+    }
 }
 
-exports.deleteList = (req, res) => {
+exports.deleteList = async(req, res) => {
     const listId = req.query.listId;
     const authorId = req.query.authorId;
     if (!listId || !authorId) {
         res.json({
-            msg: "List id or Author id is required"
+            msg: "listid && authorid is required"
         })
     }
-    listModel.findByIdAndRemove({ author: authorId, _id: listId }).then((removedList) => {
+    try {
+        const removedList = await listModel.findByIdAndRemove({ author: authorId, _id: listId });
         res.json({
             msg: "List removed successfully",
             data: removedList
         })
-    }).catch(error => {
+    } catch (error) {
         res.status(400).json({ error });
-    })
+    }
 }

@@ -2,10 +2,14 @@ const taskModel = require('../../models/tasks.model');
 const listModel = require('../../models/lists.model');
 
 exports.getAllTasks = async(req, res) => {
+    const authorId = req.query.authorId;
+    if (!authorId) {
+        res.json({
+            msg: "authorid & alltasks is required"
+        })
+    }
     try {
-        const authorId = req.query.authorId;
         const allTasks = await taskModel.find({ author: authorId });
-        console.log(allTasks);
         res.json({
             msg: "Fetched all tasks successfully",
             data: allTasks
@@ -15,30 +19,37 @@ exports.getAllTasks = async(req, res) => {
     }
 }
 
-exports.getTasksInList = (req, res) => {
-        taskModel.find({
-            listId: req.query.listId,
-            author: req.query.authorId
-        }).then((allTasks) => {
+exports.getTasksInList = async(req, res) => {
+        try {
+            const allTasks = await taskModel.find({
+                listId: req.query.listId,
+                author: req.query.authorId
+            })
             res.json({
                 msg: "Fetched all tasks successfully",
                 data: allTasks
             })
-        }).catch(error => {
+        } catch (error) {
             res.status(400).json({ error });
-        })
+        }
     }
     // not efficient yet!
-exports.searchTask = (req, res) => {
-    const task = req.body.title
-    taskModel.find({ title: task }).then((allTasks) => {
+exports.searchTask = async(req, res) => {
+    const task = req.body.title;
+    if (!task) {
+        res.json({
+            msg: "task is required"
+        })
+    }
+    try {
+        const allTasks = await taskModel.find({ title: task });
         res.json({
             msg: "Fetched all tasks successfully",
             data: allTasks
         })
-    }).catch(error => {
+    } catch (error) {
         res.status(400).json({ error });
-    })
+    }
 }
 
 exports.createTask = async(req, res) => {
@@ -47,7 +58,7 @@ exports.createTask = async(req, res) => {
     const author = req.body.author;
     if (!listId || !title || !author) {
         res.json({
-            msg: 'List id, Title or Author is required'
+            msg: "listid & title & author is required"
         })
     }
     try {
@@ -69,48 +80,51 @@ exports.createTask = async(req, res) => {
     }
 }
 
-exports.updateTask = (req, res) => {
+exports.updateTask = async(req, res) => {
     const _listId = req.query.listId;
     const tasksId = req.query.listId;
     const authorId = req.body.author;
     if (!_listId || !tasksId || !authorId) {
         res.json({
-            msg: 'List id, Task id or Author id are required'
+            msg: "_listid & tasksid & authorid is required"
         })
     }
-    taskModel.findOneAndUpdate({ _id: tasksId, listId: _listId, author: authorId }, {
-        $set: req.body
-    }).then(() => {
+    try {
+        await taskModel.findOneAndUpdate({ _id: tasksId, listId: _listId, author: authorId }, {
+            $set: req.body
+        });
         res.json({
             msg: "task updated successfully"
         })
-    }).catch(error => {
+    } catch (error) {
         res.status(400).json({ error });
-    })
+    }
 }
 
-exports.deleteTask = (req, res) => {
+exports.deleteTask = async(req, res) => {
     const _listId = req.query.listId;
     const tasksId = req.query.listId;
     const authorId = req.body.author;
     if (!_listId || !tasksId || !authorId) {
         res.json({
-            msg: 'List id, Task id or Author id are required'
+            msg: "_listid & tasksid & authorid is required"
         })
     }
-    taskModel.findByIdAndRemove({ _id: tasksId, listId: _listId, author: authorId }).then((removedTask) => {
+    try {
+        await taskModel.findByIdAndRemove({ _id: tasksId, listId: _listId, author: authorId });
         res.json({
-            msg: "successfully removed task",
-            data: removedTask
+            msg: "successfully removed task"
         })
-    })
+    } catch (error) {
+        res.status(400).json({ error });
+    }
 }
 
 exports.completeTask = async(req, res) => {
     const _listId = req.query.listId;
     if (!_listId) {
         res.json({
-            msg: "Task id or Author id is required"
+            msg: "_listid is required"
         })
     }
     try {
