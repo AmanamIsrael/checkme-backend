@@ -1,4 +1,3 @@
-const { string } = require('@hapi/joi');
 const mongoose = require('mongoose');
 
 const userSchema = mongoose.Schema({
@@ -22,11 +21,7 @@ const userSchema = mongoose.Schema({
     },
     image: {
         type: String,
-    },
-    createdDate: {
-        type: Date,
-        default: Date.now()
     }
-})
+}, { timestamps: true });
 
 module.exports = mongoose.model('user', userSchema);

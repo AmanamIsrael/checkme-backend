@@ -1,4 +1,4 @@
-const { string, boolean } = require('@hapi/joi');
+const { ref } = require('@hapi/joi');
 const mongoose = require('mongoose');
 
 const taskSchema = mongoose.Schema({
@@ -9,17 +9,18 @@ const taskSchema = mongoose.Schema({
     },
     listId: {
         type: mongoose.Types.ObjectId,
-        required: true
+        required: true,
+        ref: 'listId'
     },
     author: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Author',
+        ref: 'author',
         required: true
     },
     completed: {
         type: Boolean,
         default: false
     }
-}, { timestamps: true })
+}, { timestamps: true });
 
 module.exports = mongoose.model('task', taskSchema);
