@@ -87,7 +87,7 @@ exports.userRegister = async(req, res) => {
 
 exports.getAllUsers = async(req, res) => {
     try {
-        const users = await userModel.find({}).select('_id fullname email password');
+        const users = await userModel.find({}).select('_id fullname email');
         res.json({
             msg: "Fetched all users successfully",
             data: users
@@ -96,20 +96,4 @@ exports.getAllUsers = async(req, res) => {
         console.log(error)
         res.status(400).json({ error });
     }
-    // userModel.find({}).then((users) => {
-    //     const usersData = users.map(user =>
-    //         user = {
-    //             id: user._id,
-    //             fullname: user.fullname,
-    //             email: user.email
-    //         }
-    //     )
-    //     res.json({
-    //         msg: "Fetched all users successfully",
-    //         data: usersData
-    //     });
-
-    // }).catch(error => {
-    //     res.status(400).json({ error });
-    // })
 }
