@@ -2,10 +2,14 @@ const taskModel = require('../../models/tasks.model');
 const listModel = require('../../models/lists.model');
 
 exports.getAllTasks = async(req, res) => {
+    const authorId = req.query.authorId;
+    if (!authorId) {
+        res.json({
+            msg: "authorid & alltasks is required"
+        })
+    }
     try {
-        const authorId = req.query.authorId;
         const allTasks = await taskModel.find({ author: authorId });
-        console.log(allTasks);
         res.json({
             msg: "Fetched all tasks successfully",
             data: allTasks
@@ -31,8 +35,13 @@ exports.getTasksInList = async(req, res) => {
     }
     // not efficient yet!
 exports.searchTask = async(req, res) => {
+    const task = req.body.title;
+    if (!task) {
+        res.json({
+            msg: "task is required"
+        })
+    }
     try {
-        const task = req.body.title;
         const allTasks = await taskModel.find({ title: task });
         res.json({
             msg: "Fetched all tasks successfully",
@@ -44,10 +53,15 @@ exports.searchTask = async(req, res) => {
 }
 
 exports.createTask = async(req, res) => {
+    const listId = req.query.listId;
+    const title = req.body.title;
+    const author = req.body.author;
+    if (!listId || !title || !author) {
+        res.json({
+            msg: "listid & title & author is required"
+        })
+    }
     try {
-        const listId = req.query.listId;
-        const title = req.body.title;
-        const author = req.body.author;
         const newTask = new taskModel({
             title,
             listId,
@@ -67,10 +81,15 @@ exports.createTask = async(req, res) => {
 }
 
 exports.updateTask = async(req, res) => {
+    const _listId = req.query.listId;
+    const tasksId = req.query.listId;
+    const authorId = req.body.author;
+    if (!_listId || !tasksId || !authorId) {
+        res.json({
+            msg: "_listid & tasksid & authorid is required"
+        })
+    }
     try {
-        const _listId = req.query.listId;
-        const tasksId = req.query.listId;
-        const authorId = req.body.author;
         await taskModel.findOneAndUpdate({ _id: tasksId, listId: _listId, author: authorId }, {
             $set: req.body
         });
@@ -83,11 +102,16 @@ exports.updateTask = async(req, res) => {
 }
 
 exports.deleteTask = async(req, res) => {
+    const _listId = req.query.listId;
+    const tasksId = req.query.listId;
+    const authorId = req.body.author;
+    if (!_listId || !tasksId || !authorId) {
+        res.json({
+            msg: "_listid & tasksid & authorid is required"
+        })
+    }
     try {
-        const _listId = req.query.listId;
-        const tasksId = req.query.listId;
-        const authorId = req.body.author;
-        const removedTask = await taskModel.findByIdAndRemove({ _id: tasksId, listId: _listId, author: authorId });
+        await taskModel.findByIdAndRemove({ _id: tasksId, listId: _listId, author: authorId });
         res.json({
             msg: "successfully removed task"
         })
@@ -97,8 +121,13 @@ exports.deleteTask = async(req, res) => {
 }
 
 exports.completeTask = async(req, res) => {
+    const _listId = req.query.listId;
+    if (!_listId) {
+        res.json({
+            msg: "_listid is required"
+        })
+    }
     try {
-        const _listId = req.query.listId;
         const task = await taskModel.findOne({ listId: _listId });
         task.completed = true;
         await task.save();

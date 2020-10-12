@@ -7,12 +7,11 @@ module.exports = (req, res, next) => {
             msg: 'Not Authorized'
         })
     }
-
     try {
         const verified = jwt.verify(token, process.env.TOKEN_SECRET);
         req.user = verified;
         next();
-    } catch (err) {
+    } catch (error) {
         res.status(400).json({
             msg: 'Token is not valid'
         });

@@ -1,9 +1,14 @@
 const listModel = require('../../models/lists.model');
 
 exports.getAllLists = async(req, res) => {
+    const userId = req.query.userId;
+    if (!userId) {
+        res.status(400).json({
+            msg: "userid is required"
+        })
+    }
     try {
-        const id = req.query.userId;
-        const list = await listModel.find({ author: id });
+        const list = await listModel.find({ author: userId });
         res.json({
             msg: 'Successfully gotten all lists',
             data: list
@@ -14,9 +19,14 @@ exports.getAllLists = async(req, res) => {
 }
 
 exports.createList = async(req, res) => {
+    const title = req.body.title;
+    const author = req.body.author;
+    if (!title || !author) {
+        res.json({
+            msg: "title & author is required"
+        })
+    }
     try {
-        const title = req.body.title;
-        const author = req.body.author;
         const newList = new listModel({
             title,
             author
@@ -32,9 +42,14 @@ exports.createList = async(req, res) => {
 }
 
 exports.updateList = async(req, res) => {
+    const listId = req.query.listId;
+    const authorId = req.query.authorId;
+    if (!listId || !authorId) {
+        res.json({
+            msg: "listid && authorid is required"
+        })
+    }
     try {
-        const listId = req.query.listId;
-        const authorId = req.query.authorId;
         await listModel.findByIdAndUpdate({ author: authorId, _id: listId }, {
             $set: req.body
         })
@@ -47,9 +62,14 @@ exports.updateList = async(req, res) => {
 }
 
 exports.deleteList = async(req, res) => {
+    const listId = req.query.listId;
+    const authorId = req.query.authorId;
+    if (!listId || !authorId) {
+        res.json({
+            msg: "listid && authorid is required"
+        })
+    }
     try {
-        const listId = req.query.listId;
-        const authorId = req.query.authorId;
         const removedList = await listModel.findByIdAndRemove({ author: authorId, _id: listId });
         res.json({
             msg: "List removed successfully",
