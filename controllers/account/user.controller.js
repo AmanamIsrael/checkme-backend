@@ -32,8 +32,9 @@ exports.userLogin = async(req, res) => {
         res.json({
             msg: 'user successfully logged in',
             data: {
-                email: user.email,
                 userId: user._id,
+                fullname: user.fullname,
+                email: user.email,
                 token
             }
 
