@@ -83,7 +83,7 @@ exports.createTask = async (req, res) => {
 exports.updateTask = async (req, res) => {
   const _listId = req.query.listId;
   const tasksId = req.query.listId;
-  const authorId = req.body.author;
+  const authorId = req.query.author;
   if (!_listId || !tasksId || !authorId) {
     res.json({
       msg: "_listid & tasksid & authorid is required",
@@ -106,7 +106,7 @@ exports.updateTask = async (req, res) => {
 
 exports.deleteTask = async (req, res) => {
   const _listId = req.query.listId;
-  const tasksId = req.query.listId;
+  const tasksId = req.query.tasksId;
   const authorId = req.query.authorId;
   if (!_listId || !tasksId || !authorId) {
     res.json({
@@ -114,14 +114,23 @@ exports.deleteTask = async (req, res) => {
     });
   }
   try {
-    await taskModel.findByIdAndRemove({
+    const task = await taskModel.findById({
       _id: tasksId,
       listId: _listId,
       author: authorId,
     });
-    res.json({
-      msg: "successfully removed task",
-    });
+    if (task) {
+      console.log(task);
+      await taskModel.findOneAndDelete({ task }, () =>
+        res.json({
+          msg: "task deleted successfully",
+        })
+      );
+    } else {
+      res.status(404).json({
+        msg: "Sorry, we couldnt find this task",
+      });
+    }
   } catch (error) {
     res.status(400).json({ error });
   }
