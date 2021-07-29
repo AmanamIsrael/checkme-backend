@@ -144,7 +144,6 @@ exports.completeTask = async (req, res) => {
     const task = await taskModel.findOne({ _id: taskId });
     task.completed = !task.completed;
     await task.save();
-    console.log(task);
     res.json({
       msg: "Task status changed successfully",
     });
